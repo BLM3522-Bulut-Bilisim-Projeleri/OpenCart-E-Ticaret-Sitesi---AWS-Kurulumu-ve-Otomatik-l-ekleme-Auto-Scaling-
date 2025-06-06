@@ -1,0 +1,2 @@
+# OpenCart-E-Ticaret-Sitesi---AWS-Kurulumu-ve-Otomatik-l-ekleme-Auto-Scaling-
+OpenCart tabanlı bu e-ticaret projesi, Amazon Web Services (AWS) altyapısı üzerinde barındırılmakta olup, EC2 üzerinde barındırılan uygulama ve RDS tabanlı veritabanı yapısıyla çalışmaktadır. Proje, Auto Scaling ile trafik yoğunluğuna göre otomatik olarak ölçeklenebilen, güvenli ve yüksek erişilebilirlik sağlayan modern bir bulut mimarisi sunar.
