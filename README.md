@@ -4,6 +4,7 @@
 Bu proje, OpenCart tabanlı bir e-ticaret sitesinin Amazon Web Services (AWS) üzerinde barındırılması, yapılandırılması ve ölçeklenmesini kapsamaktadır. Projede EC2, RDS ve Auto Scaling servisleri kullanılmıştır.
 
 ---
+**Youtube:** https://youtu.be/_XIkWev6e7A
 
 ## 📌 Bileşenler
 
@@ -88,4 +89,4 @@ sudo rm -rf /var/www/html/install
 ## 👤 Geliştirici
 
 **Ömer Doğan**
-**Youtube:**
+
