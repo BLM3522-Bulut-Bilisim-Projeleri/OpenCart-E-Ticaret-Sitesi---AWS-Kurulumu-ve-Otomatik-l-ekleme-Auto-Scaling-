@@ -1,44 +1,91 @@
-# 🛒 OpenCart E-Ticaret Sitesi - AWS Kurulumu ve Otomatik Ölçekleme (Auto Scaling)
 
-Bu proje, açık kaynaklı e-ticaret platformu **OpenCart**'ın Amazon Web Services (AWS) üzerinde barındırılması ve otomatik olarak ölçeklenebilir hale getirilmesini içermektedir. Projede bir EC2 sunucusu üzerinde OpenCart kurulmuş, MySQL veritabanı için RDS kullanılmış ve Auto Scaling yapısı kurulmuştur.
+# 🛍️ OpenCart AWS E-Ticaret Projesi
 
----
-
-## 📌 Proje Amacı
-
-Bu çalışmanın amacı, yüksek erişilebilirlik ve ölçeklenebilirlik özelliklerine sahip, tamamen bulut tabanlı bir e-ticaret sistemi oluşturmaktır. AWS servisleri kullanılarak kurulan sistem, trafiğe bağlı olarak kaynakları dinamik şekilde artırıp azaltabilir.
+Bu proje, OpenCart tabanlı bir e-ticaret sitesinin Amazon Web Services (AWS) üzerinde barındırılması, yapılandırılması ve ölçeklenmesini kapsamaktadır. Projede EC2, RDS ve Auto Scaling servisleri kullanılmıştır.
 
 ---
 
-## 🚀 Kullanılan AWS Servisleri
+## 📌 Bileşenler
 
-| Servis | Açıklama |
-|--------|----------|
-| **EC2** | OpenCart'ın kurulduğu sanal sunucu |
-| **RDS (MySQL)** | Veritabanı hizmeti |
-| **Auto Scaling Group** | Trafiğe göre EC2 sayısını otomatik yönetir |
-| **Elastic Load Balancer (Opsiyonel)** | Trafiği dağıtmak için |
-| **VPC ve Subnet** | Ağ yapılandırması |
-| **Security Groups** | Güvenlik duvarı ayarları |
+- **OpenCart v4.1.0.3**
+- **EC2**: Web sunucusu (Apache + PHP)
+- **RDS (MySQL)**: Veritabanı sunucusu
+- **Auto Scaling & Load Balancer**
+- **Amazon VPC**
 
 ---
 
-## 🧱 Teknolojiler
+## ☁️ AWS Üzerinde Kurulum Adımları
 
-- **OpenCart 4.1.0.3**
-- **Amazon Linux 2**
-- **Apache HTTP Server**
-- **PHP 8.x**
-- **MySQL 8.x (AWS RDS)**
+### 1. EC2 Üzerinde Apache ve PHP Kurulumu
+
+```bash
+sudo yum update -y
+sudo yum install -y httpd php php-mysqlnd php-gd php-mbstring php-xml unzip
+sudo systemctl start httpd
+sudo systemctl enable httpd
+````
+
+### 2. OpenCart Kurulumu
+
+```bash
+# OpenCart zip dosyasını EC2'ye yükleyin
+scp -i "asd.pem" "C:\Users\bycyc\Downloads\opencart-4.1.0.3.zip" ec2-user@34.230.46.179:/home/ec2-user/
+
+# Dosyaları açın ve dizine taşıyın
+cd /var/www/html
+sudo unzip /home/ec2-user/opencart-4.1.0.3.zip
+sudo cp -r upload/* .
+sudo cp config-dist.php config.php
+sudo cp admin/config-dist.php admin/config.php
+sudo chown -R apache:apache /var/www/html
+sudo chmod -R 755 /var/www/html
+```
+
+### 3. RDS MySQL Veritabanı
+
+* AWS RDS üzerinden bir MySQL veritabanı oluşturun.
+* EC2 instance'ının IP'sine RDS Security Group üzerinden 3306 portunu açın.
+* Veritabanı bağlantısını test edin:
+
+```bash
+mysql -h <rds-endpoint> -u admin -p
+```
+
+### 4. OpenCart Web Arayüzünden Kurulum
+
+* Tarayıcıdan EC2 IP’sine gidin: `http://<EC2-IP>`
+* Kurulum ekranında RDS bilgilerini girin (host, kullanıcı, şifre, veritabanı).
+* Kurulumdan sonra güvenlik için install klasörünü silin:
+
+```bash
+sudo rm -rf /var/www/html/install
+```
 
 ---
 
-## 📝 Kurulum Adımları
+## 🔁 Auto Scaling
 
-### 1. EC2 Sunucusu Kurulumu
+* VPC oluşturun, içinde 2 veya daha fazla farklı **Availability Zone** barındıran subnet'ler tanımlayın.
+* EC2 Launch Template oluşturun (gerekli instance, AMI, güvenlik grubu).
+* Auto Scaling Group ayarlayın, Load Balancer ile ilişkilendirin.
 
-- Amazon Linux 2 AMI seçildi.
-- Güvenlik grubu ayarlarında **SSH (22)**, **HTTP (80)** ve **HTTPS (443)** portları açıldı.
-- SSH bağlantısı sağlandı:
-  ```bash
-  ssh -i "asd.pem" ec2-user@34.230.46.179
+---
+
+## 📁 Dosya Yapısı
+
+```
+/var/www/html/
+├── admin/
+├── catalog/
+├── config.php
+├── admin/config.php
+└── ...
+```
+
+---
+
+## 👤 Geliştirici
+
+**Ömer Doğan**
+**Youtube:**
